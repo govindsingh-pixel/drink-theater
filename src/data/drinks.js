@@ -3,8 +3,8 @@ export const drinks = {
     id: 'virgin-mojito',
     name: 'Virgin Mojito',
     tagline: 'Scroll to watch every ingredient go in',
-    video: '/videos/mojito.mp4',
-    poster: '/videos/poster.jpg',
+    video: `${import.meta.env.BASE_URL}videos/mojito.mp4`,
+    poster: `${import.meta.env.BASE_URL}videos/poster.jpg`,
     chapters: [
       { t: 0, label: 'Crushed Ice' },
       { t: 3, label: 'Fresh Mint' },
