@@ -2,6 +2,7 @@ import './style.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { activeDrink } from './data/drinks.js'
+import { build3DJourney } from './timeline/build3DJourney.js'
 import { buildVideoJourney } from './timeline/buildVideoJourney.js'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -9,12 +10,6 @@ gsap.registerPlugin(ScrollTrigger)
 const app = document.querySelector('#app')
 
 app.innerHTML = `
-  <div class="loader" aria-hidden="true">
-    <div class="loader-mark">DT</div>
-    <div class="loader-bar"><span></span></div>
-    <div class="loader-pct">0%</div>
-  </div>
-
   <header class="hero">
     <div class="hero-bg"></div>
     <p class="hero-eyebrow">Drink Theater presents</p>
@@ -31,10 +26,8 @@ app.innerHTML = `
 
   <section class="journey" aria-label="${activeDrink.name} being made">
     <div class="video-frame">
-      <video class="journey-video journey-video--bg" src="${activeDrink.video}" poster="${activeDrink.poster}"
-        muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
-      <video class="journey-video journey-video--fg" src="${activeDrink.video}" poster="${activeDrink.poster}"
-        muted playsinline preload="auto"></video>
+      <div class="stage-glow" aria-hidden="true"></div>
+      <canvas class="drink-canvas"></canvas>
       <div class="vignette"></div>
       <div class="grain"></div>
     </div>
@@ -56,49 +49,34 @@ app.innerHTML = `
   </section>
 `
 
-// ---------- loader + boot ----------
-const loader = document.querySelector('.loader')
-const loaderFill = loader.querySelector('.loader-bar span')
-const loaderPct = loader.querySelector('.loader-pct')
-const video = document.querySelector('.journey-video--fg')
+bootJourney()
+introAnimation()
 
-const boot = () => {
-  gsap.to(loader, {
-    autoAlpha: 0,
-    duration: 0.6,
-    onComplete: () => {
-      loader.remove()
-      buildVideoJourney(activeDrink, document.querySelector('.journey'))
-      introAnimation()
-    },
-  })
-}
+// ---------- journey: try 3D, fall back to video scrub ----------
+function bootJourney() {
+  const journey = document.querySelector('.journey')
+  const scene = build3DJourney(activeDrink, journey)
+  if (scene) return
 
-let loaded = 0
-const bump = () => {
-  loaded = Math.min(loaded + 12, 92)
-  loaderFill.style.width = `${loaded}%`
-  loaderPct.textContent = `${loaded}%`
-}
-;['loadeddata', 'canplay', 'loadedmetadata', 'progress', 'durationchange', 'error'].forEach((ev) =>
-  video.addEventListener(ev, bump),
-)
-
-let finished = false
-const finish = () => {
-  if (finished) return
-  finished = true
-  loaderFill.style.width = '100%'
-  loaderPct.textContent = '100%'
-  // wait a beat so the 100% is visible
-  setTimeout(boot, 350)
-}
-
-if (video.readyState >= 3) finish()
-else {
-  video.addEventListener('canplaythrough', finish, { once: true })
-  // safety: never hang the loader more than 8s
-  setTimeout(finish, 8000)
+  const wrap = journey.querySelector('.video-frame')
+  const bg = document.createElement('video')
+  bg.className = 'journey-video journey-video--bg'
+  bg.src = activeDrink.video
+  bg.muted = true
+  bg.playsInline = true
+  bg.preload = 'auto'
+  bg.setAttribute('aria-hidden', 'true')
+  bg.tabIndex = -1
+  const fg = document.createElement('video')
+  fg.className = 'journey-video journey-video--fg'
+  fg.src = activeDrink.video
+  fg.muted = true
+  fg.playsInline = true
+  fg.preload = 'auto'
+  wrap.append(bg, fg)
+  const start = () => buildVideoJourney(activeDrink, journey)
+  if (fg.readyState >= 1) start()
+  else fg.addEventListener('loadedmetadata', start, { once: true })
 }
 
 // ---------- hero intro ----------
@@ -120,11 +98,4 @@ function introAnimation() {
       scrub: true,
     },
   })
-}
-
-// ---------- reduced motion ----------
-if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  document.querySelectorAll('.journey-video').forEach((v) => (v.currentTime = 0))
-  ScrollTrigger.getAll().forEach((st) => st.kill())
-  loader.remove()
 }
