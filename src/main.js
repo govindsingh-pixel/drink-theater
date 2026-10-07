@@ -19,8 +19,8 @@ app.innerHTML = `
     <div class="hero-bg"></div>
     <p class="hero-eyebrow">Drink Theater presents</p>
     <h1 class="hero-title" aria-label="${activeDrink.name}">
-      <span class="hero-line">MOJITO</span>
-      <span class="hero-line hero-line--outline">CLASSIC</span>
+      <span class="hero-line">BLUE CURACAO</span>
+      <span class="hero-line hero-line--outline">MOJITO</span>
     </h1>
     <p class="hero-tag">${activeDrink.tagline}</p>
     <div class="scroll-hint">
@@ -29,7 +29,7 @@ app.innerHTML = `
     </div>
   </header>
 
-  <section class="journey" aria-label="Mojito being made">
+  <section class="journey" aria-label="${activeDrink.name} being made">
     <div class="video-frame">
       <video class="journey-video" src="${activeDrink.video}" poster="${activeDrink.poster}"
         muted playsinline preload="auto"></video>
@@ -82,7 +82,10 @@ const bump = () => {
   video.addEventListener(ev, bump),
 )
 
+let finished = false
 const finish = () => {
+  if (finished) return
+  finished = true
   loaderFill.style.width = '100%'
   loaderPct.textContent = '100%'
   // wait a beat so the 100% is visible

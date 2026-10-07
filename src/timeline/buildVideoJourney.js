@@ -37,7 +37,7 @@ export function buildVideoJourney(drink, section) {
   const st = ScrollTrigger.create({
     trigger: section,
     start: 'top top',
-    end: `+=${Math.round(duration * 100)}%`,
+    end: `+=${Math.round(duration * 55)}%`,
     pin: true,
     scrub: 1,
     anticipatePin: 1,

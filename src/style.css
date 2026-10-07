@@ -1,8 +1,8 @@
 :root {
   --bg: #07090a;
   --bg-2: #0d1113;
-  --accent: #c9f563;
-  --accent-dim: rgba(201, 245, 99, 0.35);
+  --accent: #38bdf8;
+  --accent-dim: rgba(56, 189, 248, 0.35);
   --text: #f4f6f2;
   --muted: #8b948a;
   --serif: 'Fraunces', 'Georgia', serif;
@@ -81,8 +81,8 @@ body {
   position: absolute;
   inset: -25%;
   background:
-    radial-gradient(ellipse 45% 40% at 50% 35%, rgba(201, 245, 99, 0.1), transparent 65%),
-    radial-gradient(ellipse 60% 50% at 50% 110%, rgba(38, 74, 44, 0.55), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 50% 35%, rgba(56, 189, 248, 0.12), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 50% 110%, rgba(20, 58, 92, 0.5), transparent 70%),
     var(--bg);
 }
 
@@ -106,7 +106,7 @@ body {
 .hero-line {
   font-family: var(--serif);
   font-weight: 500;
-  font-size: clamp(3.4rem, 14vw, 12rem);
+  font-size: clamp(2.4rem, 10.5vw, 9.5rem);
   letter-spacing: -0.03em;
 }
 
@@ -182,8 +182,8 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 75% 75% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.55) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.55) 100%);
+    radial-gradient(ellipse 75% 75% at 50% 50%, transparent 58%, rgba(0, 0, 0, 0.28) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.3) 100%);
   z-index: 2;
 }
 
@@ -194,7 +194,7 @@ body {
   width: 300%;
   height: 300%;
   pointer-events: none;
-  opacity: 0.07;
+  opacity: 0.04;
   z-index: 3;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain-shift 0.9s steps(4) infinite;
@@ -259,7 +259,7 @@ body {
   padding: 12vh 6vw;
   text-align: center;
   background:
-    radial-gradient(ellipse 55% 45% at 50% 0%, rgba(201, 245, 99, 0.07), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%),
     linear-gradient(180deg, #000, var(--bg-2));
 }
 
@@ -321,7 +321,7 @@ body {
 
 .cta-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(201, 245, 99, 0.3);
+  box-shadow: 0 14px 34px rgba(56, 189, 248, 0.3);
 }
 
 .footer {
