@@ -19,7 +19,7 @@ app.innerHTML = `
     <div class="hero-bg"></div>
     <p class="hero-eyebrow">Drink Theater presents</p>
     <h1 class="hero-title" aria-label="${activeDrink.name}">
-      <span class="hero-line">BLUE CURACAO</span>
+      <span class="hero-line">VIRGIN</span>
       <span class="hero-line hero-line--outline">MOJITO</span>
     </h1>
     <p class="hero-tag">${activeDrink.tagline}</p>

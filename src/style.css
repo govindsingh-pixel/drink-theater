@@ -1,8 +1,8 @@
 :root {
   --bg: #07090a;
   --bg-2: #0d1113;
-  --accent: #38bdf8;
-  --accent-dim: rgba(56, 189, 248, 0.35);
+  --accent: #c9f563;
+  --accent-dim: rgba(201, 245, 99, 0.35);
   --text: #f4f6f2;
   --muted: #8b948a;
   --serif: 'Fraunces', 'Georgia', serif;
@@ -81,8 +81,8 @@ body {
   position: absolute;
   inset: -25%;
   background:
-    radial-gradient(ellipse 45% 40% at 50% 35%, rgba(56, 189, 248, 0.12), transparent 65%),
-    radial-gradient(ellipse 60% 50% at 50% 110%, rgba(20, 58, 92, 0.5), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 50% 35%, rgba(201, 245, 99, 0.1), transparent 65%),
+    radial-gradient(ellipse 60% 50% at 50% 110%, rgba(38, 74, 44, 0.5), transparent 70%),
     var(--bg);
 }
 
@@ -273,7 +273,7 @@ body {
   padding: 12vh 6vw;
   text-align: center;
   background:
-    radial-gradient(ellipse 55% 45% at 50% 0%, rgba(56, 189, 248, 0.08), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 50% 0%, rgba(201, 245, 99, 0.07), transparent 70%),
     linear-gradient(180deg, #000, var(--bg-2));
 }
 
@@ -335,7 +335,7 @@ body {
 
 .cta-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 14px 34px rgba(201, 245, 99, 0.3);
 }
 
 .footer {
