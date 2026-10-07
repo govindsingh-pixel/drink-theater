@@ -169,11 +169,25 @@ body {
   justify-content: center;
 }
 
-.journey-video {
+/* full video always visible: blurred cover backdrop + contained sharp foreground */
+.journey-video--bg {
+  position: absolute;
+  inset: 0;
   height: 100%;
   width: 100%;
   object-fit: cover;
+  filter: blur(30px) saturate(1.25) brightness(0.75);
+  transform: scale(1.15);
+}
+
+.journey-video--fg {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
   object-position: center;
+  filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.55));
 }
 
 /* cinematic vignette + edge scrims */

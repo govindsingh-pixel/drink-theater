@@ -6,12 +6,12 @@ export const drinks = {
     video: '/videos/mojito.mp4',
     poster: '/videos/poster.jpg',
     chapters: [
-      { t: 0, label: 'Crushed Ice' },
-      { t: 2.5, label: 'Fresh Mint' },
-      { t: 5, label: 'Lime' },
-      { t: 7.5, label: 'Blue Curacao' },
-      { t: 10.5, label: 'Soda Fizz' },
-      { t: 13, label: 'Top-Up Pour' },
+      { t: 0, label: 'White Rum' },
+      { t: 3, label: 'Fresh Lime' },
+      { t: 7, label: 'Crushed Ice' },
+      { t: 9.5, label: 'Blue Curacao' },
+      { t: 13.5, label: 'Soda Fizz' },
+      { t: 16, label: 'Garnish' },
     ],
   },
 }

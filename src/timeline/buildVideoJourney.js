@@ -7,7 +7,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
  * Chapters = ingredient labels synced to video timestamps.
  */
 export function buildVideoJourney(drink, section) {
-  const video = section.querySelector('.journey-video')
+  const videos = Array.from(section.querySelectorAll('.journey-video'))
+  const video = videos[0]
   const labelEl = section.querySelector('.chapter-label')
   const progressBar = section.querySelector('.progress-fill')
   const chapters = drink.chapters || []
@@ -49,7 +50,9 @@ export function buildVideoJourney(drink, section) {
         ease: 'power2.out',
         overwrite: true,
         onUpdate() {
-          if (video.readyState >= 1) video.currentTime = proxy.t
+          videos.forEach((v) => {
+            if (v.readyState >= 1) v.currentTime = proxy.t
+          })
         },
       })
       if (progressBar) progressBar.style.transform = `scaleX(${self.progress})`

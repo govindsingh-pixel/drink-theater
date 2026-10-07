@@ -31,7 +31,9 @@ app.innerHTML = `
 
   <section class="journey" aria-label="${activeDrink.name} being made">
     <div class="video-frame">
-      <video class="journey-video" src="${activeDrink.video}" poster="${activeDrink.poster}"
+      <video class="journey-video journey-video--bg" src="${activeDrink.video}" poster="${activeDrink.poster}"
+        muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+      <video class="journey-video journey-video--fg" src="${activeDrink.video}" poster="${activeDrink.poster}"
         muted playsinline preload="auto"></video>
       <div class="vignette"></div>
       <div class="grain"></div>
@@ -58,7 +60,7 @@ app.innerHTML = `
 const loader = document.querySelector('.loader')
 const loaderFill = loader.querySelector('.loader-bar span')
 const loaderPct = loader.querySelector('.loader-pct')
-const video = document.querySelector('.journey-video')
+const video = document.querySelector('.journey-video--fg')
 
 const boot = () => {
   gsap.to(loader, {
@@ -122,7 +124,7 @@ function introAnimation() {
 
 // ---------- reduced motion ----------
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  video.currentTime = 0
+  document.querySelectorAll('.journey-video').forEach((v) => (v.currentTime = 0))
   ScrollTrigger.getAll().forEach((st) => st.kill())
   loader.remove()
 }
