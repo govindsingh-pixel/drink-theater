@@ -1,60 +1,81 @@
 import './style.css'
-import heroImg from './assets/hero.png'
-import javascriptLogo from './assets/javascript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.js'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { activeDrink } from './data/drinks.js'
+import { buildDrinkTimeline } from './timeline/buildDrinkTimeline.js'
 
-document.querySelector('#app').innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${javascriptLogo}" class="framework" alt="JavaScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.js</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+gsap.registerPlugin(ScrollTrigger)
 
-<div class="ticks"></div>
+const app = document.querySelector('#app')
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-          <img class="button-icon" src="${javascriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+app.innerHTML = `
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <h1 class="hero-title" aria-label="${activeDrink.name}">
+      ${activeDrink.name.split(' ')[0].toUpperCase()}
+    </h1>
+    <p class="hero-tag">${activeDrink.tagline}</p>
+    <div class="scroll-hint">
+      <span>Scroll to make it</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </header>
 
-<div class="ticks"></div>
-<section id="spacer"></section>
+  <section class="stage" aria-label="Drink making journey">
+    <div class="stage-inner">
+      <div class="step-dots" aria-hidden="true">
+        ${activeDrink.steps.map((s) => `<span class="step-dot" title="${s.label}"></span>`).join('')}
+      </div>
+
+      <div class="step-label"></div>
+
+      <div class="glass-wrap">
+        <div class="liquid"><div class="liquid-fill"></div></div>
+        <img class="glass-img" src="${activeDrink.glass}" alt="Empty glass" />
+      </div>
+
+      <img class="finished-drink" src="${activeDrink.finished}" alt="${activeDrink.name} ready" />
+
+      ${activeDrink.steps
+        .map(
+          (s) => `
+        <img class="ingredient ${s.assetClass}" data-ing="${s.key}" src="${s.asset}" alt="" aria-hidden="true" />
+      `,
+        )
+        .join('')}
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Apni drink banwani hai?</h2>
+    <p>Ek drink, ek scroll, zero recipe text.</p>
+    <form class="cta-form" action="mailto:hello@example.com" method="get" enctype="text/plain">
+      <input type="email" name="body" placeholder="your@email.com" required aria-label="Email" />
+      <button type="submit">Banao</button>
+    </form>
+    <footer class="footer">drink-theater — built with GSAP ScrollTrigger</footer>
+  </section>
 `
 
-setupCounter(document.querySelector('#counter'))
+buildDrinkTimeline(activeDrink, document.querySelector('.stage'))
+
+// hero parallax on the giant title
+gsap.to('.hero-title', {
+  yPercent: 60,
+  autoAlpha: 0.15,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: true,
+  },
+})
+
+// reduced motion: skip scrub journey, show finished state
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  ScrollTrigger.getAll().forEach((st) => st.kill())
+  gsap.set('.glass-wrap', { autoAlpha: 0 })
+  gsap.set('.finished-drink', { autoAlpha: 1, scale: 1 })
+  gsap.set('.step-label', { autoAlpha: 1, y: 0, textContent: activeDrink.name })
+}
