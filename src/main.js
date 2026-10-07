@@ -2,13 +2,19 @@ import './style.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { activeDrink } from './data/drinks.js'
-import { buildImageJourney } from './timeline/buildImageJourney.js'
+import { buildVideoJourney } from './timeline/buildVideoJourney.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const app = document.querySelector('#app')
 
 app.innerHTML = `
+  <div class="loader" aria-hidden="true">
+    <div class="loader-mark">DT</div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-pct">0%</div>
+  </div>
+
   <header class="hero">
     <div class="hero-bg"></div>
     <p class="hero-eyebrow">Drink Theater presents</p>
@@ -24,11 +30,14 @@ app.innerHTML = `
   </header>
 
   <section class="journey" aria-label="${activeDrink.name} being made">
-    <div class="stage">
-      <div class="stage-glow" aria-hidden="true"></div>
+    <div class="video-frame">
+      <video class="journey-video journey-video--bg" src="${activeDrink.video}" poster="${activeDrink.poster}"
+        muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
+      <video class="journey-video journey-video--fg" src="${activeDrink.video}" poster="${activeDrink.poster}"
+        muted playsinline preload="auto"></video>
+      <div class="vignette"></div>
+      <div class="grain"></div>
     </div>
-    <div class="vignette"></div>
-    <div class="grain"></div>
     <div class="chapter-label" aria-live="polite"></div>
     <div class="progress">
       <div class="progress-fill"></div>
@@ -47,12 +56,49 @@ app.innerHTML = `
   </section>
 `
 
-bootJourney()
-introAnimation()
+// ---------- loader + boot ----------
+const loader = document.querySelector('.loader')
+const loaderFill = loader.querySelector('.loader-bar span')
+const loaderPct = loader.querySelector('.loader-pct')
+const video = document.querySelector('.journey-video--fg')
 
-// ---------- journey: HD image scroll-scrub ----------
-function bootJourney() {
-  buildImageJourney(activeDrink.acts, document.querySelector('.journey'), import.meta.env.BASE_URL)
+const boot = () => {
+  gsap.to(loader, {
+    autoAlpha: 0,
+    duration: 0.6,
+    onComplete: () => {
+      loader.remove()
+      buildVideoJourney(activeDrink, document.querySelector('.journey'))
+      introAnimation()
+    },
+  })
+}
+
+let loaded = 0
+const bump = () => {
+  loaded = Math.min(loaded + 12, 92)
+  loaderFill.style.width = `${loaded}%`
+  loaderPct.textContent = `${loaded}%`
+}
+;['loadeddata', 'canplay', 'loadedmetadata', 'progress', 'durationchange', 'error'].forEach((ev) =>
+  video.addEventListener(ev, bump),
+)
+
+let finished = false
+const finish = () => {
+  if (finished) return
+  finished = true
+  loaderFill.style.width = '100%'
+  loaderPct.textContent = '100%'
+  // wait a beat so the 100% is visible
+  setTimeout(boot, 350)
+}
+
+if (video.readyState >= 3) finish()
+else {
+  video.addEventListener('canplaythrough', finish, { once: true })
+  // safety: never hang the loader more than 8s
+  setTimeout(finish, 8000)
 }
 
 // ---------- hero intro ----------
@@ -74,4 +120,11 @@ function introAnimation() {
       scrub: true,
     },
   })
+}
+
+// ---------- reduced motion ----------
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('.journey-video').forEach((v) => (v.currentTime = 0))
+  ScrollTrigger.getAll().forEach((st) => st.kill())
+  loader.remove()
 }
