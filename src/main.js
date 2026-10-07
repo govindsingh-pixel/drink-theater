@@ -2,8 +2,7 @@ import './style.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { activeDrink } from './data/drinks.js'
-import { build3DJourney } from './timeline/build3DJourney.js'
-import { buildVideoJourney } from './timeline/buildVideoJourney.js'
+import { buildImageJourney } from './timeline/buildImageJourney.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -25,12 +24,11 @@ app.innerHTML = `
   </header>
 
   <section class="journey" aria-label="${activeDrink.name} being made">
-    <div class="video-frame">
+    <div class="stage">
       <div class="stage-glow" aria-hidden="true"></div>
-      <canvas class="drink-canvas"></canvas>
-      <div class="vignette"></div>
-      <div class="grain"></div>
     </div>
+    <div class="vignette"></div>
+    <div class="grain"></div>
     <div class="chapter-label" aria-live="polite"></div>
     <div class="progress">
       <div class="progress-fill"></div>
@@ -52,31 +50,9 @@ app.innerHTML = `
 bootJourney()
 introAnimation()
 
-// ---------- journey: try 3D, fall back to video scrub ----------
+// ---------- journey: HD image scroll-scrub ----------
 function bootJourney() {
-  const journey = document.querySelector('.journey')
-  const scene = build3DJourney(activeDrink, journey)
-  if (scene) return
-
-  const wrap = journey.querySelector('.video-frame')
-  const bg = document.createElement('video')
-  bg.className = 'journey-video journey-video--bg'
-  bg.src = activeDrink.video
-  bg.muted = true
-  bg.playsInline = true
-  bg.preload = 'auto'
-  bg.setAttribute('aria-hidden', 'true')
-  bg.tabIndex = -1
-  const fg = document.createElement('video')
-  fg.className = 'journey-video journey-video--fg'
-  fg.src = activeDrink.video
-  fg.muted = true
-  fg.playsInline = true
-  fg.preload = 'auto'
-  wrap.append(bg, fg)
-  const start = () => buildVideoJourney(activeDrink, journey)
-  if (fg.readyState >= 1) start()
-  else fg.addEventListener('loadedmetadata', start, { once: true })
+  buildImageJourney(activeDrink.acts, document.querySelector('.journey'), import.meta.env.BASE_URL)
 }
 
 // ---------- hero intro ----------

@@ -111,7 +111,7 @@ body {
   50% { transform: translateY(8px) rotate(45deg); opacity: 1; }
 }
 
-/* ---------- journey (pinned video) ---------- */
+/* ---------- journey (pinned HD-image scrub) ---------- */
 .journey {
   position: relative;
   height: 100vh;
@@ -119,53 +119,44 @@ body {
   overflow: hidden;
 }
 
-.video-frame {
+/* moody bar backdrop + full-frame HD image acts */
+.stage {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
 }
 
-/* moody bar backdrop + full-frame 3d canvas */
 .stage-glow {
   position: absolute;
   inset: 0;
   background:
     radial-gradient(ellipse 42% 34% at 50% 58%, rgba(201, 245, 99, 0.09), transparent 70%),
     radial-gradient(ellipse 55% 45% at 50% 108%, rgba(38, 74, 44, 0.5), transparent 75%),
-    radial-gradient(ellipse 70% 60% at 50% 20%, rgba(0, 0, 0, 0), transparent 100%),
     #07090a;
 }
 
-.drink-canvas {
+/* each act: blurred cover backdrop + contained sharp foreground */
+.act-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
-  display: block;
+  pointer-events: none;
+  opacity: 0;
 }
 
-/* fallback (no WebGL): video scrub keeps the same layout */
-.journey-video--bg {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  width: 100%;
+.act-img--bg {
   object-fit: cover;
   filter: blur(30px) saturate(1.25) brightness(0.75);
   transform: scale(1.15);
+  z-index: 0;
 }
 
-.journey-video--fg {
-  position: relative;
-  z-index: 1;
-  height: 100%;
-  width: 100%;
+.act-img--fg {
   object-fit: contain;
   object-position: center;
-  filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.55));
+  z-index: 1;
+  will-change: transform, opacity, filter;
 }
 
 /* cinematic vignette + edge scrims */
